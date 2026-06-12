@@ -24,7 +24,6 @@ fun EnderecoTela(context: Context) {
     val db = DatabaseProvider.getDatabase(context)
     val repository = EnderecoRepository(db.enderecoDao())
     val viewModel: EnderecoViewModel = viewModel(factory = EnderecoViewModelFactory(repository))
-
     val enderecos by viewModel.enderecos.collectAsState(initial = emptyList())
 
     var codigo by remember { mutableStateOf("") }
