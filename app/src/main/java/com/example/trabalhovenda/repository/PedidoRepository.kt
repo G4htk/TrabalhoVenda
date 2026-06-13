@@ -9,6 +9,11 @@ class PedidoRepository(val pedidoDao: PedidoDao) {
     suspend fun inserir(pedidoEntity: PedidoEntity): Long{
        return pedidoDao.inserir(pedido = pedidoEntity)
     }
+
+    suspend fun buscarPorCodigo(codigo: String): PedidoEntity? {
+        return pedidoDao.buscarPorCodigo(codigo)
+    }
+
     suspend fun atualizar(pedidoEntity: PedidoEntity){
         pedidoDao.atualizar(pedido = pedidoEntity)
     }

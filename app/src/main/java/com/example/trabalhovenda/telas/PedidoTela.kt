@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.filled.Search
 import com.example.trabalhovenda.database.DatabaseProvider
 import com.example.trabalhovenda.entity.ClienteEntity
 import com.example.trabalhovenda.entity.EnderecoEntity
@@ -37,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PedidoScreen(context: Context) {
+fun PedidoTela(context: Context) {
     val db = DatabaseProvider.getDatabase(context)
     val pedidoRepository = PedidoRepository(db.pedidoDao())
     val pedidoItemRepository = PedidoItemRepository(db.pedidoItemDao())
@@ -57,6 +58,7 @@ fun PedidoScreen(context: Context) {
     val valorTotal by viewModel.valorTotal.collectAsState()
     val totalItens by viewModel.totalItens.collectAsState()
     val parcelas by viewModel.parcelas.collectAsState()
+    val pedidoEncontrado by viewModel.pedidoEncontrado.collectAsState()
 
     var clienteSelecionado by remember { mutableStateOf<ClienteEntity?>(null) }
     var enderecoSelecionado by remember { mutableStateOf<EnderecoEntity?>(null) }
@@ -65,6 +67,7 @@ fun PedidoScreen(context: Context) {
     var condicaoPagamento by remember { mutableStateOf("avista") }
     var numeroParcelas by remember { mutableStateOf("") }
     var erro by remember { mutableStateOf("") }
+    var codigoBusca by remember { mutableStateOf("") }
 
     var clienteExpanded by remember { mutableStateOf(false) }
     var enderecoExpanded by remember { mutableStateOf(false) }
@@ -89,7 +92,36 @@ fun PedidoScreen(context: Context) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Dropdown Cliente
+            OutlinedTextField(
+                value = codigoBusca,
+                onValueChange = { codigoBusca = it },
+                label = { Text("Buscar pedido por código") },
+                trailingIcon = {
+                    IconButton(onClick = { viewModel.buscarPorCodigo(codigoBusca) }) {
+                        Icon(Icons.Default.Search, contentDescription = "Buscar")
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            pedidoEncontrado?.let {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(text = "Pedido: ${it.codigo}", style = MaterialTheme.typography.titleMedium)
+                        Text(text = "Cliente ID: ${it.clienteId}", style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Pagamento: ${it.condicaoPagamento}", style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Frete: R$ ${"%.2f".format(it.valorFrete)}", style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Total: R$ ${"%.2f".format(it.valorTotal)}", style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Total Itens: ${it.totalItens}", style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
             ExposedDropdownMenuBox(
                 expanded = clienteExpanded,
                 onExpandedChange = { clienteExpanded = !clienteExpanded }
@@ -119,7 +151,6 @@ fun PedidoScreen(context: Context) {
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Dropdown Item
             ExposedDropdownMenuBox(
                 expanded = itemExpanded,
                 onExpandedChange = { itemExpanded = !itemExpanded }
@@ -149,7 +180,6 @@ fun PedidoScreen(context: Context) {
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Valor unitário e unidade de medida
             itemSelecionado?.let {
                 Text(text = "Valor unitário: R$ ${it.valor}", style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Unidade: ${it.unMedia}", style = MaterialTheme.typography.bodyMedium)
@@ -191,7 +221,6 @@ fun PedidoScreen(context: Context) {
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Lista de itens adicionados
             if (itensPedido.isNotEmpty()) {
                 Text(
                     text = "Itens do Pedido",
@@ -225,7 +254,6 @@ fun PedidoScreen(context: Context) {
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // Condição de pagamento
             Text(text = "Condição de Pagamento", style = MaterialTheme.typography.titleMedium)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
@@ -242,7 +270,6 @@ fun PedidoScreen(context: Context) {
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Parcelas
             if (condicaoPagamento == "aprazo") {
                 OutlinedTextField(
                     value = numeroParcelas,
@@ -270,7 +297,6 @@ fun PedidoScreen(context: Context) {
                 }
             }
 
-            // Endereço de entrega
             ExposedDropdownMenuBox(
                 expanded = enderecoExpanded,
                 onExpandedChange = { enderecoExpanded = !enderecoExpanded }
@@ -300,7 +326,6 @@ fun PedidoScreen(context: Context) {
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Valor final com frete e desconto/acréscimo
             val frete = calcularFrete(enderecoSelecionado)
             val valorFinal = viewModel.calcularValorFinal(condicaoPagamento, frete)
 

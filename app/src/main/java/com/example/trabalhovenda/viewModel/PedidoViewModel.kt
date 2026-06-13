@@ -30,6 +30,9 @@ class PedidoViewModel(
     private val _parcelas = MutableStateFlow<List<Double>>(emptyList())
     val parcelas: StateFlow<List<Double>> = _parcelas
 
+    private val _pedidoEncontrado = MutableStateFlow<PedidoEntity?>(null)
+    val pedidoEncontrado: StateFlow<PedidoEntity?> = _pedidoEncontrado
+
     fun adicionarItem(itemId: Int, quantidade: Int, valorUnitario: Double) {
         if (quantidade <= 0 || valorUnitario <= 0) return
 
@@ -61,8 +64,8 @@ class PedidoViewModel(
     fun calcularValorFinal(condicao: String, frete: Double): Double {
         val subtotal = _valorTotal.value
         val comCondicao = when (condicao) {
-            "avista" -> subtotal * 0.95   // 5% desconto
-            "aprazo" -> subtotal * 1.05   // 5% acréscimo
+            "avista" -> subtotal * 0.95
+            "aprazo" -> subtotal * 1.05
             else -> subtotal
         }
         return comCondicao + frete
@@ -119,6 +122,12 @@ class PedidoViewModel(
         _valorTotal.value = 0.0
         _totalItens.value = 0
         _parcelas.value = emptyList()
+    }
+
+    fun buscarPorCodigo(codigo: String) {
+        viewModelScope.launch {
+            _pedidoEncontrado.value = pedidoRepository.buscarPorCodigo(codigo)
+        }
     }
 }
 
