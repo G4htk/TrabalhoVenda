@@ -6,8 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.foradevenda.entity.ClienteEntity
-import com.example.foradevenda.entity.EnderecoEntity
+import com.example.trabalhovenda.entity.EnderecoEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,6 +20,6 @@ interface EnderecoDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun atualizar(endereco: EnderecoEntity)
 
-    @Delete()
+    @Delete
     suspend fun deletar(endereco: EnderecoEntity)
 }

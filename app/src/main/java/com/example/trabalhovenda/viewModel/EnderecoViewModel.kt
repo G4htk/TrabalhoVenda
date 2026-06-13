@@ -3,8 +3,7 @@ package com.example.trabalhovenda.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.foradevenda.entity.ClienteEntity
-import com.example.foradevenda.entity.EnderecoEntity
+import com.example.trabalhovenda.entity.EnderecoEntity
 import com.example.trabalhovenda.repository.EnderecoRepository
 import kotlinx.coroutines.launch
 

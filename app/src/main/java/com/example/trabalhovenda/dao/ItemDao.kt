@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.foradevenda.entity.ItemEntity
+import com.example.trabalhovenda.entity.ItemEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,6 +20,6 @@ interface ItemDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun atualizar(item: ItemEntity)
 
-    @Delete()
+    @Delete
     suspend fun deletar(item: ItemEntity)
 }

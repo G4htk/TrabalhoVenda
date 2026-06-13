@@ -3,10 +3,10 @@ package com.example.trabalhovenda.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.foradevenda.dao.ClienteDao
-import com.example.foradevenda.entity.ClienteEntity
-import com.example.foradevenda.entity.EnderecoEntity
-import com.example.foradevenda.entity.ItemEntity
+import com.example.trabalhovenda.dao.ClienteDao
+import com.example.trabalhovenda.entity.ClienteEntity
+import com.example.trabalhovenda.entity.EnderecoEntity
+import com.example.trabalhovenda.entity.ItemEntity
 import com.example.trabalhovenda.converter.Converters
 import com.example.trabalhovenda.dao.EnderecoDao
 import com.example.trabalhovenda.dao.ItemDao

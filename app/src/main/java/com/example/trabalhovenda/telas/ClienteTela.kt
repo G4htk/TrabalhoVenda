@@ -12,11 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.text.KeyboardOptions
-import com.example.foradevenda.entity.EnderecoEntity
+import com.example.trabalhovenda.entity.EnderecoEntity
 import com.example.trabalhovenda.database.DatabaseProvider
 import com.example.trabalhovenda.repository.ClienteRepository
 import com.example.trabalhovenda.repository.EnderecoRepository
@@ -28,7 +26,7 @@ import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClienteScreen(context: Context) {
+fun ClienteTela(context: Context) {
     val db = DatabaseProvider.getDatabase(context)
     val clienteRepository = ClienteRepository(db.clienteDao())
     val enderecoRepository = EnderecoRepository(db.enderecoDao())

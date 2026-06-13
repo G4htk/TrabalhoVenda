@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "pedido")
-class PedidoEntity(
+data class PedidoEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val codigo: String,
     val clienteId: Int,
@@ -13,5 +13,4 @@ class PedidoEntity(
     val valorFrete: Double,
     val valorTotal: Double,
     val totalItens: Int
-
-){}
+)

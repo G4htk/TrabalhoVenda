@@ -1,10 +1,10 @@
 package com.example.trabalhovenda.repository
 
-import com.example.foradevenda.dao.ClienteDao
-import com.example.foradevenda.entity.ClienteEntity
+import com.example.trabalhovenda.dao.ClienteDao
+import com.example.trabalhovenda.entity.ClienteEntity
 
 class ClienteRepository(private val clienteDao: ClienteDao) {
-    val cliente = clienteDao.buscar();
+    val cliente = clienteDao.buscar()
 
     suspend fun inserir(clienteEntity: ClienteEntity){
         clienteDao.inserir(cliente = clienteEntity)
