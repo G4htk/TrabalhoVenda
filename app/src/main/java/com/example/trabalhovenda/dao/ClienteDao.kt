@@ -1,4 +1,4 @@
-package com.example.foradevenda.dao
+package com.example.trabalhovenda.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.foradevenda.entity.ClienteEntity
+import com.example.trabalhovenda.entity.ClienteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,6 +20,6 @@ interface ClienteDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun atualizar(cliente: ClienteEntity)
 
-    @Delete()
+    @Delete
     suspend fun deletar(cliente: ClienteEntity)
 }

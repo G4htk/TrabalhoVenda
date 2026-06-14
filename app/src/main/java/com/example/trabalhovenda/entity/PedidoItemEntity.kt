@@ -12,4 +12,4 @@ data class PedidoItemEntity(
     val quantidade: Int,
     val valorUnitario: Double,
     val valorTotal: Double
-){}
+)

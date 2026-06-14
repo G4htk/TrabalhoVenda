@@ -3,8 +3,8 @@ package com.example.trabalhovenda.repository
 import com.example.trabalhovenda.dao.PedidoItemDao
 import com.example.trabalhovenda.entity.PedidoItemEntity
 
-class PedidoItemRepository(public val pedidoItemDao: PedidoItemDao) {
-    val item = pedidoItemDao.buscar();
+class PedidoItemRepository(val pedidoItemDao: PedidoItemDao) {
+    val item = pedidoItemDao.buscar()
 
     suspend fun inserir(pedidoItemEntity: PedidoItemEntity): Long {
        return pedidoItemDao.inserir(pedidoItem = pedidoItemEntity)

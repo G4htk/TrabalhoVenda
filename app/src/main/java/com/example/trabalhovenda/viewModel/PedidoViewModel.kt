@@ -1,6 +1,7 @@
 package com.example.trabalhovenda.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.trabalhovenda.entity.PedidoEntity
 import com.example.trabalhovenda.entity.PedidoItemEntity
@@ -17,7 +18,6 @@ class PedidoViewModel(
 
     val pedidos = pedidoRepository.pedidos
 
-    // Estado da tela
     private val _itensPedido = MutableStateFlow<List<PedidoItemEntity>>(emptyList())
     val itensPedido: StateFlow<List<PedidoItemEntity>> = _itensPedido
 
@@ -30,7 +30,9 @@ class PedidoViewModel(
     private val _parcelas = MutableStateFlow<List<Double>>(emptyList())
     val parcelas: StateFlow<List<Double>> = _parcelas
 
-    // Adicionar item ao pedido (ainda não salva no banco)
+    private val _pedidoEncontrado = MutableStateFlow<PedidoEntity?>(null)
+    val pedidoEncontrado: StateFlow<PedidoEntity?> = _pedidoEncontrado
+
     fun adicionarItem(itemId: Int, quantidade: Int, valorUnitario: Double) {
         if (quantidade <= 0 || valorUnitario <= 0) return
 
@@ -51,7 +53,6 @@ class PedidoViewModel(
         _totalItens.value = _itensPedido.value.sumOf { it.quantidade }
     }
 
-    // Calcula frete baseado na cidade/estado
     fun calcularFrete(cidade: String, estado: String): Double {
         return when {
             estado != "PR" -> 50.0
@@ -60,30 +61,26 @@ class PedidoViewModel(
         }
     }
 
-    // Calcula valor final com desconto/acréscimo + frete
     fun calcularValorFinal(condicao: String, frete: Double): Double {
         val subtotal = _valorTotal.value
         val comCondicao = when (condicao) {
-            "avista" -> subtotal * 0.95   // 5% desconto
-            "aprazo" -> subtotal * 1.05   // 5% acréscimo
+            "avista" -> subtotal * 0.95
+            "aprazo" -> subtotal * 1.05
             else -> subtotal
         }
         return comCondicao + frete
     }
 
-    // Calcula parcelas
     fun calcularParcelas(numeroParcelas: Int, valorFinal: Double) {
         if (numeroParcelas <= 0) return
         val valorParcela = valorFinal / numeroParcelas
         _parcelas.value = List(numeroParcelas) { valorParcela }
     }
 
-    // Gera código do pedido automaticamente
     private fun gerarCodigo(): String {
         return "PED${System.currentTimeMillis()}"
     }
 
-    // Conclui e salva o pedido
     fun concluirPedido(
         clienteId: Int,
         enderecoId: Int,
@@ -120,11 +117,25 @@ class PedidoViewModel(
         }
     }
 
-    // Limpa tudo após concluir
     private fun limparPedido() {
         _itensPedido.value = emptyList()
         _valorTotal.value = 0.0
         _totalItens.value = 0
         _parcelas.value = emptyList()
+    }
+
+    fun buscarPorCodigo(codigo: String) {
+        viewModelScope.launch {
+            _pedidoEncontrado.value = pedidoRepository.buscarPorCodigo(codigo)
+        }
+    }
+}
+
+class PedidoViewModelFactory(
+    private val pedidoRepository: PedidoRepository,
+    private val pedidoItemRepository: PedidoItemRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return PedidoViewModel(pedidoRepository, pedidoItemRepository) as T
     }
 }

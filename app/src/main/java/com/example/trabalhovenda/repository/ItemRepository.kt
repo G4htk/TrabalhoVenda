@@ -1,10 +1,10 @@
 package com.example.trabalhovenda.repository
 
-import com.example.foradevenda.entity.ItemEntity
+import com.example.trabalhovenda.entity.ItemEntity
 import com.example.trabalhovenda.dao.ItemDao
 
-class ItemRepository(public val itemDao: ItemDao) {
-    val item = itemDao.buscar();
+class ItemRepository(val itemDao: ItemDao) {
+    val item = itemDao.buscar()
 
     suspend fun inserir(itemEntity: ItemEntity){
         itemDao.inserir(item = itemEntity)

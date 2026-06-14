@@ -17,9 +17,12 @@ interface PedidoDao {
     @Query("SELECT * FROM pedido ORDER BY clienteId")
     fun buscar(): Flow<List<PedidoEntity>>
 
+    @Query("SELECT * FROM pedido WHERE codigo = :codigo")
+    suspend fun buscarPorCodigo(codigo: String): PedidoEntity?
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun atualizar(pedido: PedidoEntity)
 
-    @Delete()
+    @Delete
     suspend fun deletar(pedido: PedidoEntity)
 }

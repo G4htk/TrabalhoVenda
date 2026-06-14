@@ -20,6 +20,6 @@ interface PedidoItemDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun atualizar(pedidoItem: PedidoItemEntity)
 
-    @Delete()
+    @Delete
     suspend fun deletar(pedidoItem: PedidoItemEntity)
 }
